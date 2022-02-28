@@ -12,8 +12,12 @@
     "@cds/city": "^1.1.0",
     "@cds/core": "^5.6.4",
     "@cds/react": "^5.6.4",
+    "@singleton-i18n/js-core-sdk": "^0.5.2",
+    "axios": "^0.26.0",
+    "classnames": "^2.3.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-query": "^3.34.16"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",
