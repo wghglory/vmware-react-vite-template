@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import {CdsButton} from '@cds/react/button';
+import {formatDate, l10n} from './i18n/i18nUtils';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -19,6 +20,8 @@ function App() {
         </p>
         <CdsButton>solid clarity button</CdsButton>
         <p className="text-red-500">Tailwind color</p>
+        <p>{l10n('common.back')}</p>
+        <p>{formatDate(new Date(), 'MMMM d, y, h:mm:ss a')}</p>
         <p>
           <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
             Learn React
