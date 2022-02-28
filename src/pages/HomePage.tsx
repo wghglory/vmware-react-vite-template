@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 
 import {useAuth} from '@/context/AuthContext';
+import {l10n} from '@/i18n/i18nUtils';
 
 const HomePage = () => {
   const {user} = useAuth();
@@ -10,11 +11,11 @@ const HomePage = () => {
       <div className="container mx-auto flex flex-col sm:flex-row sm:items-center sm:p-12 lg:p-20 font-montserrat">
         <div className="sm:w-2/5 flex flex-col items-center sm:items-start m-8 sm:m-12">
           <h1 className="text-4xl lg:text-6xl leading-none mb-4">
-            <strong className="font-black invisible sm:visible">Sirius</strong>
+            <strong className="font-black invisible sm:visible">{l10n('common.product')}</strong>
             <br />
-            Team Work Process
+            {l10n('common.productSubtitle')}
           </h1>
-          <p className="lg:text-lg mb-4 sm:mb-12">Watch Your SaaS Project Workflow any time, anywhere.</p>
+          <p className="lg:text-lg mb-4 sm:mb-12">{l10n('common.productDesc')}</p>
           {!user && (
             <Link
               to={'/sign-in'}

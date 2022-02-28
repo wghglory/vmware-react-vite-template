@@ -1,8 +1,8 @@
 import {rest} from 'msw';
 
 import {ACCESS_TOKEN} from '@/const';
+import {User} from '@/models/user';
 
-import {User} from '../../models/user';
 import {apiPrefix} from '../const';
 import users from '../data/users';
 import {res} from '../res';
@@ -15,7 +15,7 @@ const handlers = [
     if (foundUser) {
       delete foundUser.password;
 
-      localStorage.setItem('__MOCK_SERVER_SIRIUS_USER__', JSON.stringify(foundUser));
+      localStorage.setItem('__MOCK_SERVER_USER__', JSON.stringify(foundUser));
 
       return res((r: any) => {
         r.headers.set(ACCESS_TOKEN, 'MOCK_ACCESS_TOKEN');
@@ -35,7 +35,7 @@ const handlers = [
 
   rest.get(`${apiPrefix}/current-user`, (req, _, ctx) => {
     const token = req.headers.get('Authorization');
-    const authUserString = localStorage.getItem('__MOCK_SERVER_SIRIUS_USER__') || '';
+    const authUserString = localStorage.getItem('__MOCK_SERVER_USER__') || '';
 
     if (!token) {
       // If not authenticated, respond with a 403 error
@@ -52,7 +52,7 @@ const handlers = [
   }),
 
   rest.delete(`${apiPrefix}/session`, (req, _, ctx) => {
-    localStorage.removeItem('__MOCK_SERVER_SIRIUS_USER__');
+    localStorage.removeItem('__MOCK_SERVER_USER__');
 
     return res(
       ctx.status(200),

@@ -1,5 +1,7 @@
 const common = {
   'common.product': 'Global Catalog',
+  'common.productSubtitle': 'OSE team come on',
+  'common.productDesc': 'Global Catalog is a great product',
   'common.productShort': 'GC',
   'common.retry': 'Retry',
   'common.selectAll': 'Select All',
@@ -10,7 +12,7 @@ const common = {
   'common.tenants': 'Tenants',
   'common.apiToken': 'API Token',
   'common.about': 'About',
-  'common.notFound': '404 Not Found',
+  'common.notFound': 'Oops! Page not found.',
   'common.pending': 'Pending',
   'common.status': 'Status',
   'common.required': 'Required',
@@ -26,6 +28,8 @@ const common = {
   'common.fullName': 'Full Name',
   'common.name': 'Name',
   'common.total': 'Total {0} items',
+  'common.noAccess': 'Sorry, you do not have access to this page.',
+  'common.returnHome': 'You may return home page from here',
 };
 
 const auth = {

@@ -1,8 +1,8 @@
-import {CdsAlert} from '@cds/react/alert';
+import {CdsAlert, CdsAlertGroup} from '@cds/react/alert';
 import {CdsButton} from '@cds/react/button';
 import {CdsFormGroup} from '@cds/react/forms';
 import {CdsInput} from '@cds/react/input';
-import React, {FormEvent, useState} from 'react';
+import {FormEvent, useState} from 'react';
 
 import {useAuth} from '@/context/AuthContext';
 import {l10n} from '@/i18n/i18nUtils';
@@ -26,7 +26,7 @@ export default function SignInPage() {
         <h1 cds-text="title" className={`${style.title} mb-8`}>
           {l10n('common.product')}
         </h1>
-        {/* <h3>{l10n('login.subtitle')}</h3> */}
+        {/* <h2>{l10n('login.subtitle')}</h2> */}
         <form className={style.loginGroup} onSubmit={submit}>
           <CdsFormGroup layout="vertical">
             <CdsInput layout="vertical">
@@ -52,15 +52,17 @@ export default function SignInPage() {
           </CdsFormGroup>
 
           {error && (
-            <CdsAlert className="mt-6" closable={true} onCloseChange={() => signOut()}>
-              {error.message}
-            </CdsAlert>
+            <CdsAlertGroup status="danger" className="mt-6" aria-label="This is an example info alert group">
+              <CdsAlert closable={true} onCloseChange={() => signOut()}>
+                {error.message}
+              </CdsAlert>
+            </CdsAlertGroup>
           )}
 
           <CdsButton
             className="mt-6"
             disabled={status === 'loading' || username === '' || password === ''}
-            loadingState={status}
+            loadingState={status === 'loading' ? 'loading' : 'default'}
             type="submit"
           >
             {l10n('auth.login')}

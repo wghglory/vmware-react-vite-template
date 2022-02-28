@@ -12,4 +12,4 @@ export interface SignInPayload {
   password: string;
 }
 
-export type Role = 'PROJECT_ADMIN' | 'TENANT_USER';
+export type Role = 'SYSTEM_OPERATOR' | 'PROVIDER_ADMIN' | 'TENANT_ADMIN' | 'TENANT_USER';

@@ -213,10 +213,14 @@ export default TheNav;
 function generateNavLinks(user: User) {
   const links = [{text: 'Public', to: '/public'}];
 
-  if (user.role === 'PROJECT_ADMIN') {
+  // TODO: l10n text
+  if (user.role === 'SYSTEM_OPERATOR') {
+    links.push({text: 'Operator', to: '/operator'});
+  }
+  if (user.role === 'PROVIDER_ADMIN') {
     links.push({text: 'Provider', to: '/provider'});
   }
-  if (user.role === 'TENANT_USER') {
+  if (user.role === 'TENANT_USER' || user.role === 'TENANT_ADMIN') {
     links.push({text: 'Tenant', to: '/tenant'});
   }
   return links;

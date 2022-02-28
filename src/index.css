@@ -2,6 +2,7 @@
 @import '../node_modules/@cds/core/global.min.css';
 @import '../node_modules/@cds/city/css/bundles/default.min.css';
 @import '../node_modules/@cds/core/styles/theme.dark.css';
+@import '../node_modules/@cds/core/table/table.min';
 
 @tailwind base;
 @tailwind components;
@@ -10,4 +11,18 @@
 html {
   font-size: 16px;
   font-family: 'Clarity City', 'Avenir Next', sans-serif;
+  scroll-behavior: smooth;
+}
+
+a {
+  word-break: break-word;
+}
+
+@layer base {
+  /* overwrite clarity black color */
+  body[cds-theme] {
+    @apply text-gray-900 dark:text-gray-100;
+    @apply transition duration-500;
+    /* @apply overflow-hidden; */
+  }
 }
