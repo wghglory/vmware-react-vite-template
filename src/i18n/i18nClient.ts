@@ -1,7 +1,7 @@
 /**
  * refer: https://vmware.github.io/singleton/docs/tutorials/integrate-singleton-in-javascript-app/
  */
-import {i18nClient as jsClient, getBrowserCultureLang, PatternCategories} from '@singleton-i18n/js-core-sdk';
+import {getBrowserCultureLang, i18nClient as jsClient, PatternCategories} from '@singleton-i18n/js-core-sdk';
 
 import {ENGLISH} from './sourceL10n';
 

@@ -1,43 +1,55 @@
-import {useState} from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {lazy, Suspense} from 'react';
+import {Route, Routes} from 'react-router-dom';
 
-import {CdsButton} from '@cds/react/button';
-import {formatDate, l10n} from './i18n/i18nUtils';
+import Layout from './components/common/Layout';
+import RequireAuth from './components/common/RequireAuth';
+import HomePage from './pages/HomePage';
+import NoAccessPage from './pages/NoAccessPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ProviderPage from './pages/ProviderPage';
+import PublicPage from './pages/PublicPage';
+import SignInPage from './pages/SignInPage';
+import TenantPage from './pages/TenantPage';
+
+const PlaygroundPage = lazy(() => import('./pages/PlaygroundPage'));
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <CdsButton>solid clarity button</CdsButton>
-        <p className="text-red-500">Tailwind color</p>
-        <p>{l10n('common.back')}</p>
-        <p>{formatDate(new Date(), 'MMMM d, y, h:mm:ss a')}</p>
-        <p>
-          <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/public" element={<PublicPage />} />
+        <Route
+          path="/provider"
+          element={
+            <RequireAuth roles={['PROJECT_ADMIN']}>
+              <ProviderPage />
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/tenant/:id"
+          element={
+            <RequireAuth roles={['TENANT_USER']}>
+              <TenantPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/play"
+          element={
+            <Suspense fallback={<div className="h-screen"></div>}>
+              <PlaygroundPage />
+            </Suspense>
+          }
+        />
+
+        <Route path="/no-access" element={<NoAccessPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+
+      <Route path="/sign-in" element={<SignInPage />} />
+    </Routes>
   );
 }
 
