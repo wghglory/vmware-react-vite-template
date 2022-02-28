@@ -18,6 +18,7 @@ function App() {
           </button>
         </p>
         <CdsButton>solid clarity button</CdsButton>
+        <p className="text-red-500">Tailwind color</p>
         <p>
           <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
             Learn React

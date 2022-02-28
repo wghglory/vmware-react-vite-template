@@ -1,3 +1,7 @@
 /* NOTE: cannot import global.min.css and module.shims.min.css due to build error */
 @import '../node_modules/@cds/core/global.min.css';
 @import '../node_modules/@cds/city/css/bundles/default.min.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
