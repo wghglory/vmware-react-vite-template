@@ -2,6 +2,8 @@ import {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import {CdsButton} from '@cds/react/button';
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -15,9 +17,7 @@ function App() {
             count is: {count}
           </button>
         </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
+        <CdsButton>solid clarity button</CdsButton>
         <p>
           <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
             Learn React
