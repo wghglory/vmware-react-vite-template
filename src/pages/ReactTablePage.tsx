@@ -45,6 +45,7 @@ export default function ReactTablePage() {
     },
   ];
 
+  const [selectedRow, setSelectedRow] = useState<Tenant[]>([]);
   const [data, setData] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
@@ -66,7 +67,24 @@ export default function ReactTablePage() {
       <h2 className="text-3xl">React Table Page (remove when clarity core v6 datagrid arrives)</h2>
 
       <ReactTable
-        selectMode="multi"
+        setSelectedRow={setSelectedRow}
+        actionList={
+          <>
+            <button
+              className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
+              onClick={() => console.log(selectedRow)}
+            >
+              AppDropdown 1
+            </button>
+            <button
+              className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
+              onClick={() => console.log(selectedRow)}
+            >
+              AppDropdown 2
+            </button>
+          </>
+        }
+        selectMode="single"
         total={total}
         columns={columns}
         caption="Tenant Table"

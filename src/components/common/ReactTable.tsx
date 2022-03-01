@@ -9,6 +9,7 @@ import {CdsButton, CdsIconButton} from '@cds/react/button';
 import {CdsIcon} from '@cds/react/icon';
 import {forwardRef, useEffect, useRef, useState} from 'react';
 import {
+  ColumnGroup,
   TableInstance,
   TableOptions,
   usePagination,
@@ -27,16 +28,30 @@ ClarityIcons.addIcons(angleIcon);
 ClarityIcons.addIcons(ellipsisVerticalIcon);
 
 // eslint-disable-next-line react/display-name
-const IndeterminateCheckbox = forwardRef(({indeterminate, ...rest}: any, ref) => {
-  const defaultRef = useRef<any>();
-  const resolvedRef: any = ref || defaultRef;
+const IndeterminateCheckbox = forwardRef(
+  ({indeterminate, onChange, setSelectedRow, selectedFlatRows, ...rest}: any, ref) => {
+    const defaultRef = useRef<any>();
+    const resolvedRef: any = ref || defaultRef;
 
-  useEffect(() => {
-    resolvedRef.current!.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
+    useEffect(() => {
+      resolvedRef.current!.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
 
-  return <input type="checkbox" ref={resolvedRef} {...rest} />;
-});
+    return (
+      <input
+        type="checkbox"
+        ref={resolvedRef}
+        {...rest}
+        onChange={e => {
+          onChange(e);
+          console.log(e);
+          // setSelectedRow(selectedFlatRows);  // TODO: hoping to emit selected rows; selectedFlatRows was the previous state;
+          // if uncomment this, it will trigger dropdown open if const [dropdownOpen, setDropdownOpen] = useState(checked) used checked instead of false
+        }}
+      />
+    );
+  },
+);
 // eslint-disable-next-line react/display-name
 const IndeterminateRadio = forwardRef(({indeterminate, ...rest}: any, ref) => {
   const defaultRef = useRef<any>();
@@ -46,13 +61,14 @@ const IndeterminateRadio = forwardRef(({indeterminate, ...rest}: any, ref) => {
     resolvedRef.current!.indeterminate = indeterminate;
   }, [resolvedRef, indeterminate]);
 
-  return <input type="radio" name="data-radio" ref={resolvedRef} {...rest} />;
+  return <input type="radio" name="select-radio" ref={resolvedRef} {...rest} />;
 });
 // eslint-disable-next-line react/display-name
-const IndeterminateButton = forwardRef(({indeterminate, data, ...rest}: any, ref) => {
+const IndeterminateButton = forwardRef(({indeterminate, actionList, onClick, checked, ...rest}: any, ref) => {
   const defaultRef = useRef<any>();
   const resolvedRef: any = ref || defaultRef;
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // TODO: if using checked, radio selection will trigger dropdown open;
+  // if using false, first time load, click button won't trigger dropdown open... it seems this component is fully refreshed
 
   useEffect(() => {
     resolvedRef.current!.indeterminate = indeterminate;
@@ -64,36 +80,42 @@ const IndeterminateButton = forwardRef(({indeterminate, data, ...rest}: any, ref
   });
 
   return (
-    <div className="relative flex">
-      <button className="ml-4" ref={resolvedRef} {...rest} onClick={() => setDropdownOpen(!dropdownOpen)}>
+    <div className="relative flex" ref={profileRef}>
+      <button
+        className="ml-4"
+        ref={resolvedRef}
+        {...rest}
+        onClick={() => {
+          onClick();
+          setDropdownOpen(true);
+        }}
+      >
         <CdsIcon shape={ellipsisVerticalIconName} />
       </button>
-      <div ref={profileRef}>
-        {dropdownOpen && (
-          <AppDropdown>
-            <button
-              className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
-              onClick={() => console.log(data)}
-            >
-              AppDropdown 1
-            </button>
-            <button
-              className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
-              onClick={() => console.log(data)}
-            >
-              AppDropdown 2
-            </button>
-          </AppDropdown>
-        )}
-      </div>
+      <div>{dropdownOpen && <AppDropdown>{actionList}</AppDropdown>}</div>
     </div>
   );
 });
+
+export interface TableProps {
+  selectMode?: 'single' | 'multi';
+  actionList?: React.ReactNode;
+  setSelectedRow: React.Dispatch<React.SetStateAction<any>>;
+  columns: ColumnGroup;
+  data: any[];
+  total: number;
+  caption?: string;
+  fetchData: (param: any) => void;
+  loading: boolean;
+  pageCount: number;
+}
 
 // TODO: missing error handling...
 // TODO: types
 export default function ReactTable({
   selectMode, // single, multi, undefined
+  actionList,
+  setSelectedRow,
   columns,
   data,
   total,
@@ -119,7 +141,7 @@ export default function ReactTable({
     previousPage,
     setPageSize,
     selectedFlatRows,
-    state: {pageIndex, pageSize, selectedRowIds},
+    state: {hiddenColumns, pageIndex, pageSize, selectedRowIds},
   } = useTable(
     {
       columns,
@@ -143,36 +165,50 @@ export default function ReactTable({
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           Header: ({getToggleAllPageRowsSelectedProps}: any) => (
-            <div>{selectMode === 'multi' && <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />}</div>
+            <div className="flex gap-2 justify-center items-center">
+              {selectMode === 'multi' && <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />}
+
+              {/* take place to make sure checkbox aligns with cell checkbox */}
+              <div className="w-7 h-5"> </div>
+            </div>
           ),
           // The cell can use the individual row's getToggleRowSelectedProps method
           // to the render a checkbox
-          Cell: ({row, toggleAllRowsSelected, toggleRowSelected}: any) => {
+          Cell: ({row, toggleAllRowsSelected, toggleRowSelected, selectedFlatRows, ...rest}: any) => {
             const currentState = row.getToggleRowSelectedProps();
+
             return (
               <div className="flex gap-2 justify-center items-center">
-                {selectMode === 'multi' && <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />}
+                {selectMode === 'multi' && (
+                  <IndeterminateCheckbox
+                    {...row.getToggleRowSelectedProps()}
+                    setSelectedRow={setSelectedRow}
+                    selectedFlatRows={selectedFlatRows}
+                  />
+                )}
                 {selectMode === 'single' && (
                   <IndeterminateRadio
                     {...currentState}
                     onClick={() => {
-                      // b)
+                      setSelectedRow(row.original);
+
                       toggleAllRowsSelected(false);
-                      // c)
                       toggleRowSelected(row.id, !currentState.checked);
                     }}
                   />
                 )}
-                <IndeterminateButton
-                  data={row.original}
-                  {...currentState}
-                  onClick={() => {
-                    // b)
-                    toggleAllRowsSelected(false);
-                    // c)
-                    toggleRowSelected(row.id, !currentState.checked);
-                  }}
-                />
+                {actionList && (
+                  <IndeterminateButton
+                    actionList={actionList}
+                    {...currentState}
+                    onClick={() => {
+                      setSelectedRow(row.original);
+                      // setSelectedRow(selectedFlatRows); // radio works, but button not
+                      toggleAllRowsSelected(false);
+                      toggleRowSelected(row.id, true);
+                    }}
+                  />
+                )}
               </div>
             );
           },
@@ -194,6 +230,13 @@ export default function ReactTable({
     };
   }, [fetchData, pageIndex, pageSize]);
 
+  // TODO: good if can emit here
+  // useEffect(() => {
+  //   console.log(selectedFlatRows);
+
+  //   setSelectedRow(selectedFlatRows);
+  // }, [selectedFlatRows.length]);
+
   return (
     <>
       {/* <pre>
@@ -213,7 +256,7 @@ export default function ReactTable({
         </code>
       </pre> */}
 
-      <pre>
+      {/* <pre>
         <code>
           {JSON.stringify(
             {
@@ -224,9 +267,9 @@ export default function ReactTable({
             2,
           )}
         </code>
-      </pre>
-      <table {...getTableProps()} cds-table="border:row border:outside" cds-text="left" className="w-full">
-        <caption>{caption}</caption>
+      </pre> */}
+      <table {...getTableProps()} cds-table="border:row border:outside" cds-text="left" className="w-full text-sm">
+        <caption className="mb-3 text-2xl">{caption}</caption>
         <thead>
           {headerGroups.map((headerGroup: any, i: any) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={i}>
