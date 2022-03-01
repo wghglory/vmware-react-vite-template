@@ -14,6 +14,7 @@ import TenantPage from './pages/TenantPage';
 
 const PlaygroundPage = lazy(() => import('./pages/PlaygroundPage'));
 const ReactTablePage = lazy(() => import('./pages/ReactDataTablePage'));
+const DatagridPage = lazy(() => import('./pages/DatagridPage'));
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
           element={
             <Suspense fallback={<div className="h-screen"></div>}>
               <ReactTablePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/datagrid"
+          element={
+            <Suspense fallback={<div className="h-screen"></div>}>
+              <DatagridPage />
             </Suspense>
           }
         />

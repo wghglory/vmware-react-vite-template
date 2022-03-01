@@ -1,3 +1,4 @@
+import {esbuildCommonjs, viteCommonjs} from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import {resolve} from 'path'; // Need to install @types/node"
 import {visualizer} from 'rollup-plugin-visualizer';
@@ -8,6 +9,7 @@ import svgrPlugin from 'vite-plugin-svgr';
 export default defineConfig({
   plugins: [
     react(),
+    viteCommonjs(),
     svgrPlugin({
       svgrOptions: {
         // icon: false,
@@ -22,6 +24,15 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [
+        // Solves:
+        // https://github.com/vitejs/vite/issues/5308
+        esbuildCommonjs(['@dellstorage/clarity-react']),
+      ],
+    },
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

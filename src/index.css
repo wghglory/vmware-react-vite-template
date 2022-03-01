@@ -4,6 +4,14 @@
 @import '../node_modules/@cds/core/styles/theme.dark.css';
 /* @import '../node_modules/@cds/core/table/table.min'; */
 
+/* TODO: merge these 2 into one with [cds-theme="dark"] */
+/* BAD THING about this approach:
+1. package bigger
+2. merge 2 css files is hard, extract common except color */
+
+/* @import './styles/datagrid.css'; */
+@import './styles/datagrid.dark.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
