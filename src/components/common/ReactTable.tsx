@@ -1,23 +1,107 @@
-import {angleIcon, ClarityIcons, stepForward2Icon} from '@cds/core/icon';
-import {CdsIconButton} from '@cds/react/button';
+import {
+  angleIcon,
+  ClarityIcons,
+  ellipsisVerticalIcon,
+  ellipsisVerticalIconName,
+  stepForward2Icon,
+} from '@cds/core/icon';
+import {CdsButton, CdsIconButton} from '@cds/react/button';
 import {CdsIcon} from '@cds/react/icon';
-import {useEffect} from 'react';
+import {forwardRef, useEffect, useRef, useState} from 'react';
 import {
   TableInstance,
   TableOptions,
   usePagination,
   UsePaginationInstanceProps,
   UsePaginationState,
+  useRowSelect,
   useTable,
 } from 'react-table';
+import {useClickAway} from 'react-use';
 
+import AppDropdown from './AppDropdown';
 import AppLoading from './AppLoading';
 
 ClarityIcons.addIcons(stepForward2Icon);
 ClarityIcons.addIcons(angleIcon);
+ClarityIcons.addIcons(ellipsisVerticalIcon);
+
+// eslint-disable-next-line react/display-name
+const IndeterminateCheckbox = forwardRef(({indeterminate, ...rest}: any, ref) => {
+  const defaultRef = useRef<any>();
+  const resolvedRef: any = ref || defaultRef;
+
+  useEffect(() => {
+    resolvedRef.current!.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return <input type="checkbox" ref={resolvedRef} {...rest} />;
+});
+// eslint-disable-next-line react/display-name
+const IndeterminateRadio = forwardRef(({indeterminate, ...rest}: any, ref) => {
+  const defaultRef = useRef<any>();
+  const resolvedRef: any = ref || defaultRef;
+
+  useEffect(() => {
+    resolvedRef.current!.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  return <input type="radio" name="data-radio" ref={resolvedRef} {...rest} />;
+});
+// eslint-disable-next-line react/display-name
+const IndeterminateButton = forwardRef(({indeterminate, data, ...rest}: any, ref) => {
+  const defaultRef = useRef<any>();
+  const resolvedRef: any = ref || defaultRef;
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    resolvedRef.current!.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
+
+  const profileRef = useRef(null);
+  useClickAway(profileRef, () => {
+    setDropdownOpen(false);
+  });
+
+  return (
+    <div className="relative flex">
+      <button className="ml-4" ref={resolvedRef} {...rest} onClick={() => setDropdownOpen(!dropdownOpen)}>
+        <CdsIcon shape={ellipsisVerticalIconName} />
+      </button>
+      <div ref={profileRef}>
+        {dropdownOpen && (
+          <AppDropdown>
+            <button
+              className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
+              onClick={() => console.log(data)}
+            >
+              AppDropdown 1
+            </button>
+            <button
+              className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
+              onClick={() => console.log(data)}
+            >
+              AppDropdown 2
+            </button>
+          </AppDropdown>
+        )}
+      </div>
+    </div>
+  );
+});
 
 // TODO: missing error handling...
-export default function ReactTable({columns, data, caption, fetchData, loading, pageCount: controlledPageCount}: any) {
+// TODO: types
+export default function ReactTable({
+  selectMode, // single, multi, undefined
+  columns,
+  data,
+  total,
+  caption,
+  fetchData,
+  loading,
+  pageCount: controlledPageCount,
+}: any) {
   // Use the useTable Hook to send the columns and data to build the table
   const {
     getTableProps, // table props from react-table
@@ -33,8 +117,9 @@ export default function ReactTable({columns, data, caption, fetchData, loading, 
     gotoPage,
     nextPage,
     previousPage,
-    // setPageSize,
-    state,
+    setPageSize,
+    selectedFlatRows,
+    state: {pageIndex, pageSize, selectedRowIds},
   } = useTable(
     {
       columns,
@@ -45,9 +130,57 @@ export default function ReactTable({columns, data, caption, fetchData, loading, 
       pageCount: controlledPageCount,
     } as TableOptions<object>,
     usePagination,
-  ) as UsePaginationInstanceProps<object> & TableInstance<object>;
+    useRowSelect,
+    hooks => {
+      if (!selectMode) {
+        return;
+      }
 
-  const {pageIndex, pageSize} = state as UsePaginationState<object>;
+      hooks.visibleColumns.push(columns => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({getToggleAllPageRowsSelectedProps}: any) => (
+            <div>{selectMode === 'multi' && <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />}</div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({row, toggleAllRowsSelected, toggleRowSelected}: any) => {
+            const currentState = row.getToggleRowSelectedProps();
+            return (
+              <div className="flex gap-2 justify-center items-center">
+                {selectMode === 'multi' && <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />}
+                {selectMode === 'single' && (
+                  <IndeterminateRadio
+                    {...currentState}
+                    onClick={() => {
+                      // b)
+                      toggleAllRowsSelected(false);
+                      // c)
+                      toggleRowSelected(row.id, !currentState.checked);
+                    }}
+                  />
+                )}
+                <IndeterminateButton
+                  data={row.original}
+                  {...currentState}
+                  onClick={() => {
+                    // b)
+                    toggleAllRowsSelected(false);
+                    // c)
+                    toggleRowSelected(row.id, !currentState.checked);
+                  }}
+                />
+              </div>
+            );
+          },
+        },
+        ...columns,
+      ]);
+    },
+  ) as any;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useEffect(() => {
@@ -72,18 +205,32 @@ export default function ReactTable({columns, data, caption, fetchData, loading, 
               pageCount,
               canNextPage,
               canPreviousPage,
+              data,
             },
             null,
             2,
           )}
         </code>
       </pre> */}
-      <table {...getTableProps()} cds-table="border:row border:outside" cds-text="center" className="w-full">
+
+      <pre>
+        <code>
+          {JSON.stringify(
+            {
+              selectedRowIds: selectedRowIds,
+              'selectedFlatRows[].original': selectedFlatRows.map((d: any) => d.original),
+            },
+            null,
+            2,
+          )}
+        </code>
+      </pre>
+      <table {...getTableProps()} cds-table="border:row border:outside" cds-text="left" className="w-full">
         <caption>{caption}</caption>
         <thead>
-          {headerGroups.map((headerGroup, i) => (
+          {headerGroups.map((headerGroup: any, i: any) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={i}>
-              {headerGroup.headers.map((column, j) => (
+              {headerGroup.headers.map((column: any, j: any) => (
                 <th {...column.getHeaderProps()} key={j}>
                   {column.render('Header')}
                 </th>
@@ -91,7 +238,7 @@ export default function ReactTable({columns, data, caption, fetchData, loading, 
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
+        <tbody {...getTableBodyProps()} className="relative">
           {page.map((row: any, i: number) => {
             prepareRow(row);
             return (
@@ -106,17 +253,13 @@ export default function ReactTable({columns, data, caption, fetchData, loading, 
               </tr>
             );
           })}
-          <tr>
-            {loading ? (
-              <td colSpan={10000}>
+          {loading && (
+            <tr>
+              <td colSpan={1000} className="absolute min-h-[100px] inset-[1px] bg-gray-100 dark:bg-gray-800">
                 <AppLoading />
               </td>
-            ) : (
-              <td colSpan={10000} cds-text="right">
-                Showing {page.length} of ~{controlledPageCount * pageSize} results
-              </td>
-            )}
-          </tr>
+            </tr>
+          )}
         </tbody>
       </table>
       {/*
@@ -163,32 +306,36 @@ export default function ReactTable({columns, data, caption, fetchData, loading, 
             {pageIndex + 1} of {pageOptions.length}
           </strong>
         </span>
-        {/* <span>
-            <span>| Go to page: &nbsp;</span>
-            <input
-              aria-label='go to page'
-              type='number'
-              defaultValue={pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                gotoPage(page);
-              }}
-              style={{ width: '100px' }}
-            />
-          </span>
-          <select
-            aria-label='select size'
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
+        <span>
+          showing {pageIndex * pageSize + 1} - {pageIndex * pageSize + 1 + Math.min(pageSize - 1, page.length - 1)} of{' '}
+          {total} items
+        </span>
+        <span>
+          <span>| Go to page: &nbsp;</span>
+          <input
+            aria-label="go to page"
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
             }}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select> */}
+            style={{width: '100px'}}
+          />
+        </span>
+        <select
+          aria-label="select size"
+          value={pageSize}
+          onChange={e => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
       </div>
     </>
   );

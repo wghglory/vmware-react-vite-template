@@ -48,12 +48,14 @@ export default function ReactTablePage() {
   const [data, setData] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const fetchData = useCallback(({pageSize, pageIndex}) => {
     setLoading(true);
 
     getTenants({offset: pageIndex * pageSize, limit: pageSize}).then(res => {
       setData(res.data.items);
+      setTotal(res.data.page_info.total);
       setPageCount(Math.ceil(res.data.page_info.total / res.data.page_info.limit));
       setLoading(false);
     });
@@ -62,7 +64,10 @@ export default function ReactTablePage() {
   return (
     <div className="container mx-auto py-10 px-6">
       <h2 className="text-3xl">React Table Page (remove when clarity core v6 datagrid arrives)</h2>
+
       <ReactTable
+        selectMode="multi"
+        total={total}
         columns={columns}
         caption="Tenant Table"
         data={data}
