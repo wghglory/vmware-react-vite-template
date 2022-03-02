@@ -18,12 +18,14 @@
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
+    "react-data-table-component": "^7.4.7",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.2.0",
     "react-query": "^3.34.16",
     "react-router-dom": "^6.2.1",
     "react-table": "^7.7.0",
-    "react-use": "^17.3.2"
+    "react-use": "^17.3.2",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-alpha.7",
