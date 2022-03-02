@@ -2,6 +2,7 @@ import {CdsTag} from '@cds/react/tag';
 import {useCallback, useState} from 'react';
 import {Link} from 'react-router-dom';
 
+import PageContainer from '@/components/common/PageContainer';
 import ReactTable from '@/components/common/ReactTable';
 import {formatDate, l10n} from '@/i18n/i18nUtils';
 import {Tenant} from '@/models';
@@ -63,9 +64,7 @@ export default function ReactTablePage() {
   }, []);
 
   return (
-    <div className="container mx-auto py-10 px-6">
-      <h2 className="text-3xl">React Table Page (remove when clarity core v6 datagrid arrives)</h2>
-
+    <PageContainer title="React Table Page (remove when clarity core v6 datagrid arrives)">
       <ReactTable
         setSelectedRow={setSelectedRow}
         actionList={
@@ -93,6 +92,6 @@ export default function ReactTablePage() {
         loading={loading}
         pageCount={pageCount}
       />
-    </div>
+    </PageContainer>
   );
 }

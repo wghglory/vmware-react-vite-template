@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 
 import Datagrid from '@/components/common/Datagrid/Datagrid';
 import DatagridDropdown from '@/components/common/Datagrid/DatagridDropdown';
+import PageContainer from '@/components/common/PageContainer';
 import {l10n} from '@/i18n/i18nUtils';
 import {Tenant} from '@/models';
 import {getTenants} from '@/services/tenantService';
@@ -104,8 +105,7 @@ export default function ReactDataTablePage() {
   };
 
   return (
-    <div className="container mx-auto py-10 px-6">
-      <h2 className="text-3xl">React Data Table Page (remove when clarity core v6 datagrid arrives)</h2>
+    <PageContainer title="React Data Table Page (remove when clarity core v6 datagrid arrives)">
       <Datagrid
         columns={columns}
         data={data}
@@ -117,6 +117,6 @@ export default function ReactDataTablePage() {
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePageSizeChange}
       />
-    </div>
+    </PageContainer>
   );
 }
