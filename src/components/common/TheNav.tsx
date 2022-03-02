@@ -25,9 +25,9 @@ const TheNav = () => {
 
   const location = useLocation();
 
-  if (!user) {
-    return null;
-  }
+  // if (!user) {
+  //   return null;
+  // }
 
   const links = generateNavLinks(user);
 
@@ -63,7 +63,7 @@ const TheNav = () => {
             </h1>
             <nav className="hidden md:block h-full">
               <ul className="ml-10 flex h-full items-stretch">
-                {links.map((link, i) => (
+                {links?.map((link, i) => (
                   <li key={link.text} className="flex items-stretch">
                     <Link
                       to={link.to}
@@ -84,12 +84,14 @@ const TheNav = () => {
               <ThemeSwitcher />
 
               <div className="relative z-50">
-                <button
-                  className="text-gray-300 text-sm font-medium ml-4 capitalize"
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                >
-                  {user.name}
-                </button>
+                {user && (
+                  <button
+                    className="text-gray-300 text-sm font-medium ml-4 capitalize"
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  >
+                    {user.name}
+                  </button>
+                )}
 
                 {/*
                 Profile dropdown panel, show/hide based on dropdown state.
@@ -169,7 +171,7 @@ const TheNav = () => {
       {/* Small screen menu open!!! Menu open: "block", Menu closed: "hidden" */}
       <div ref={menuRef} className={`md:hidden ${showMenu ? 'block' : 'hidden'}`}>
         <div className="px-2 pt-2 pb-3 sm:px-3">
-          {links.map((link, i) => (
+          {links?.map((link, i) => (
             <button
               key={link.text}
               onClick={() => navigateTo(link.to)}
@@ -184,8 +186,8 @@ const TheNav = () => {
         <div className="pt-4 pb-3 border-t border-gray-700">
           <div className="flex items-center justify-center px-5">
             <div className="">
-              <div className="text-base font-medium leading-none text-white capitalize">{user.name}</div>
-              <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
+              <div className="text-base font-medium leading-none text-white capitalize">{user?.name}</div>
+              <div className="text-sm font-medium leading-none text-gray-400">{user?.email}</div>
             </div>
           </div>
           <div className="mt-3 px-2 space-y-1">
@@ -210,8 +212,10 @@ const TheNav = () => {
 
 export default TheNav;
 
-function generateNavLinks(user: User) {
+function generateNavLinks(user: User | null) {
   const links = [{text: 'Public', to: '/public'}];
+
+  if (!user) return null;
 
   // TODO: l10n text
   if (user.role === 'SYSTEM_OPERATOR') {
