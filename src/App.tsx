@@ -13,7 +13,7 @@ import SignInPage from './pages/SignInPage';
 import TenantPage from './pages/TenantPage';
 
 const PlaygroundPage = lazy(() => import('./pages/PlaygroundPage'));
-const ReactTablePage = lazy(() => import('./pages/ReactTablePage'));
+const ReactTablePage = lazy(() => import('./pages/ReactDataTablePage'));
 
 function App() {
   return (

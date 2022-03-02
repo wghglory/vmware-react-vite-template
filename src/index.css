@@ -2,7 +2,7 @@
 @import '../node_modules/@cds/core/global.min.css';
 @import '../node_modules/@cds/city/css/bundles/default.min.css';
 @import '../node_modules/@cds/core/styles/theme.dark.css';
-@import '../node_modules/@cds/core/table/table.min';
+/* @import '../node_modules/@cds/core/table/table.min'; */
 
 @tailwind base;
 @tailwind components;
@@ -25,4 +25,59 @@ a {
     @apply transition duration-500;
     /* @apply overflow-hidden; */
   }
+}
+
+/* React Data Table style */
+:root {
+  --dg-border: rgb(204, 204, 204);
+  --dg-header-bg: rgb(250, 250, 250);
+  --dg-text: #111827;
+  --dg-bg: #fff;
+  --dg-bg-hover: #e5e7eb;
+  --dg-text-disable: rgb(156, 156, 156);
+}
+
+[cds-theme='dark'] {
+  --dg-border: #374151;
+  --dg-header-bg: #111827;
+  --dg-text: #f3f4f6;
+  --dg-bg: #1f2937;
+  --dg-bg-hover: #4b5563;
+}
+
+.rdt_TableHead,
+.rdt_TableHeadRow {
+  background: var(--dg-header-bg) !important;
+  color: var(--dg-text);
+}
+
+.rdt_TableRow:hover {
+  outline-style: none !important;
+  background-color: var(--dg-bg-hover) !important;
+}
+
+.rdt_TableRow {
+  background: var(--dg-bg) !important;
+  color: var(--dg-text) !important;
+  border-bottom-color: var(--dg-border) !important;
+}
+
+.rdt_Table {
+  border: 1px solid var(--dg-border);
+  border-bottom: none;
+}
+
+.rdt_Pagination {
+  border: 1px solid var(--dg-border);
+  background: var(--dg-header-bg) !important;
+  color: var(--dg-text) !important;
+  /* min-height: unset !important; */
+}
+
+.rdt_Pagination button {
+  /* padding: 0 !important; */
+  fill: var(--dg-text);
+}
+.rdt_Pagination button[disabled] {
+  fill: var(--dg-text-disable);
 }
