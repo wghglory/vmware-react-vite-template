@@ -1,3 +1,5 @@
+import PageContainer from '@/components/common/PageContainer';
+
 export default function PublicPage() {
-  return <div>PublicPage</div>;
+  return <PageContainer title="Public">PublicPage</PageContainer>;
 }

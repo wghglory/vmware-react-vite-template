@@ -1,3 +1,5 @@
+import PageContainer from '@/components/common/PageContainer';
+
 export default function ProviderPage() {
-  return <div>ProviderPage</div>;
+  return <PageContainer title="Provider">ProviderPage</PageContainer>;
 }

@@ -1,3 +1,5 @@
+import PageContainer from '@/components/common/PageContainer';
+
 export default function TenantPage() {
-  return <div>TenantPage</div>;
+  return <PageContainer title="Tenant">TenantPage</PageContainer>;
 }

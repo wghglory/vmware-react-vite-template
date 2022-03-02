@@ -1,3 +1,5 @@
+import PageContainer from '@/components/common/PageContainer';
+
 export default function OperatorPage() {
-  return <div>OperatorPage</div>;
+  return <PageContainer title="Operator">OperatorPage</PageContainer>;
 }
