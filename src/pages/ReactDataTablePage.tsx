@@ -41,6 +41,7 @@ const columns: TableColumn<Tenant>[] = [
       </Link>
     ),
     sortable: true,
+    minWidth: '200px',
   },
   {
     name: l10n('common.fullName'),
