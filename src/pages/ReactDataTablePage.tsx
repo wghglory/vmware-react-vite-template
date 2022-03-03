@@ -8,7 +8,7 @@ import DatagridDropdown from '@/components/common/Datagrid/DatagridDropdown';
 import PageContainer from '@/components/common/PageContainer';
 import {l10n} from '@/i18n/i18nUtils';
 import {Tenant} from '@/models';
-import {getTenants} from '@/services/tenantService';
+import {getTenants} from '@/services/tenant.service';
 
 const columns: TableColumn<Tenant>[] = [
   {

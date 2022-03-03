@@ -1,4 +1,4 @@
-import authHandlers from './auth';
-import tenantHandlers from './tenant';
+import authHandlers from './auth.handler';
+import tenantHandlers from './tenant.handler';
 
 export const handlers = [...authHandlers, ...tenantHandlers];

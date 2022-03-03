@@ -4,7 +4,7 @@ import {ACCESS_TOKEN} from '@/const';
 import {User} from '@/models/user';
 
 import {apiPrefix} from '../const';
-import users from '../data/users';
+import users from '../data/users.data';
 import {res} from '../res';
 
 const handlers = [

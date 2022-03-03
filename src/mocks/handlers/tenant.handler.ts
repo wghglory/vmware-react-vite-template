@@ -1,7 +1,7 @@
 import {rest} from 'msw';
 
 import {apiPrefix} from '../const';
-import tenants from '../data/tenants';
+import tenants from '../data/tenants.data';
 import {res} from '../res';
 
 const handlers = [
