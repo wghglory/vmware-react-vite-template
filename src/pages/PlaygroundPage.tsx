@@ -8,7 +8,7 @@ export default function PlaygroundPage() {
   const [count, setCount] = useState(0);
 
   return (
-    <header className="flex justify-center flex-col p-20">
+    <header className="flex flex-col justify-center p-20">
       <img src={logo} className="w-20" alt="logo" />
       <p>Hello Vite + React!</p>
       <p>

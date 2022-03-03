@@ -9,7 +9,7 @@ export default function Layout() {
 
   return (
     <>
-      <div className="h-screen flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
+      <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
         <TheNav />
         {/* <main className="mt-[64px] flex-1 overflow-auto" ref={containerRef} onScroll={scroll}> */}
         <main className="mt-[64px] flex-1 overflow-auto">

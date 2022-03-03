@@ -15,13 +15,13 @@ const columns: TableColumn<Tenant>[] = [
     cell: row => (
       <DatagridDropdown>
         <button
-          className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
+          className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
           onClick={() => alert(JSON.stringify(row, null, 2))}
         >
           Action 1
         </button>
         <button
-          className="hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 w-full text-left"
+          className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800"
           onClick={() => alert(JSON.stringify(row, null, 2))}
         >
           Action 2

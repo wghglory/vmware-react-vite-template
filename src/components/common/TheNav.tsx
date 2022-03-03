@@ -40,16 +40,16 @@ const TheNav = () => {
   }
 
   return (
-    <header className="bg-gray-800 fixed w-full z-50">
+    <header className="fixed z-50 w-full bg-gray-800">
       {/* large screen */}
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-stretch justify-between h-[64px]">
+        <div className="flex h-[64px] items-stretch justify-between">
           {/* logo navlinks */}
           <div className="flex items-center">
             <h1>
-              <Link className="flex-shrink-0 flex items-center" to="/">
+              <Link className="flex flex-shrink-0 items-center" to="/">
                 <svg
-                  className="text-sky-600 h-8 w-8 inline-block mr-4"
+                  className="mr-4 inline-block h-8 w-8 text-sky-600"
                   viewBox="0 0 35 32"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -65,13 +65,13 @@ const TheNav = () => {
                 <span className="text-xl font-bold text-gray-100">Global Catalog</span>
               </Link>
             </h1>
-            <nav className="hidden md:block h-full">
+            <nav className="hidden h-full md:block">
               <ul className="ml-10 flex h-full items-stretch">
                 {links?.map((link, i) => (
                   <li key={link.text} className="flex items-stretch">
                     <Link
                       to={link.to}
-                      className={`px-4 text-sm flex items-center font-medium ${
+                      className={`flex items-center px-4 text-sm font-medium ${
                         location.pathname === link.to ? activeClass : inactiveClass
                       }`}
                     >
@@ -84,13 +84,13 @@ const TheNav = () => {
           </div>
           {/* right side */}
           <div className="hidden md:block">
-            <div className="ml-4 h-full flex items-center md:ml-6">
+            <div className="ml-4 flex h-full items-center md:ml-6">
               <ThemeSwitcher />
 
               <div className="relative z-50">
                 {user && (
                   <button
-                    className="text-gray-300 text-sm font-medium ml-4 capitalize"
+                    className="ml-4 text-sm font-medium capitalize text-gray-300"
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
                   >
                     {user.name}
@@ -110,36 +110,36 @@ const TheNav = () => {
                 {showProfileMenu && (
                   <div
                     ref={profileRef}
-                    className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5"
+                    className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-gray-700"
                   >
                     <div
-                      className="py-1 rounded-md bg-white dark:bg-gray-700 shadow-xs"
+                      className="shadow-xs rounded-md bg-white py-1 dark:bg-gray-700"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="user-menu"
                     >
                       <button
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700
-                          dark:text-gray-300
+                        className="block w-full px-4 py-2 text-left text-sm text-gray-700
                           hover:bg-gray-100
+                          dark:text-gray-300
                           dark:hover:bg-gray-900"
                         role="menuitem"
                       >
                         Your Profile
                       </button>
                       <button
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700
-                          dark:text-gray-300
+                        className="block w-full px-4 py-2 text-left text-sm text-gray-700
                           hover:bg-gray-100
+                          dark:text-gray-300
                           dark:hover:bg-gray-900"
                         role="menuitem"
                       >
                         Settings
                       </button>
                       <button
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700
-                          dark:text-gray-300
+                        className="block w-full px-4 py-2 text-left text-sm text-gray-700
                           hover:bg-gray-100
+                          dark:text-gray-300
                           dark:hover:bg-gray-900"
                         role="menuitem"
                         onClick={signOut}
@@ -157,7 +157,7 @@ const TheNav = () => {
           <div className="-mr-2 flex md:hidden">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white"
+              className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:bg-gray-700 focus:text-white focus:outline-none"
             >
               {/* Menu open: "hidden", Menu closed: "block" */}
               <svg className="block h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -179,7 +179,7 @@ const TheNav = () => {
             <button
               key={link.text}
               onClick={() => navigateTo(link.to)}
-              className={`block px-3 py-2 rounded-md text-sm w-full font-medium ${
+              className={`block w-full rounded-md px-3 py-2 text-sm font-medium ${
                 location.pathname === link.to ? activeClass : inactiveClass
               } ${i > 0 && 'mt-1'}`}
             >
@@ -187,23 +187,23 @@ const TheNav = () => {
             </button>
           ))}
         </div>
-        <div className="pt-4 pb-3 border-t border-gray-700">
+        <div className="border-t border-gray-700 pt-4 pb-3">
           <div className="flex items-center justify-center px-5">
             <div className="">
-              <div className="text-base font-medium leading-none text-white capitalize">{user?.name}</div>
+              <div className="text-base font-medium capitalize leading-none text-white">{user?.name}</div>
               <div className="text-sm font-medium leading-none text-gray-400">{user?.email}</div>
             </div>
           </div>
-          <div className="mt-3 px-2 space-y-1">
-            <button className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">
+          <div className="mt-3 space-y-1 px-2">
+            <button className="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
               Your Profile
             </button>
-            <button className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">
+            <button className="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">
               Settings
             </button>
             <button
               onClick={signOut}
-              className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+              className="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
             >
               Sign out
             </button>
