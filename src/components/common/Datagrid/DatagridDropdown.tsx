@@ -7,7 +7,7 @@ import AppDropdown from '../AppDropdown';
 
 ClarityIcons.addIcons(ellipsisVerticalIcon);
 
-export default function DatagridDropdown({children}: {children: JSX.Element[]}) {
+export default function DatagridDropdown({children}: {children: JSX.Element | JSX.Element[]}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const profileRef = useRef(null);
