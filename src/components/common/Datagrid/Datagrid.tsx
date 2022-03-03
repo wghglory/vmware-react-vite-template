@@ -15,6 +15,7 @@ export interface TableProps<T> {
   onChangeRowsPerPage: (currentRowsPerPage: number, currentPage: number) => void;
   selectableRows?: boolean;
   selectableRowsSingle?: boolean;
+  keyField?: string;
 }
 
 const sortIcon = <CdsIcon shape="arrow" />;

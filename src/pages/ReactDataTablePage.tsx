@@ -117,6 +117,7 @@ export default function ReactDataTablePage() {
         onSelectedRowsChange={handleSelectionChange}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePageSizeChange}
+        // keyField="id"  // if id is tenantId, update here
       />
     </PageContainer>
   );
