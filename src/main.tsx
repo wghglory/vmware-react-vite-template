@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './App';
-import {AppProviders} from './context';
+import {AppProviders} from './core/context';
 import {i18nClient} from './i18n/i18nClient';
 
 async function prepare() {

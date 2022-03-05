@@ -12,6 +12,7 @@ html {
   font-size: 16px;
   font-family: 'Clarity City', 'Avenir Next', sans-serif;
   scroll-behavior: smooth;
+  line-height: 1; /* overwrite clarity line-height 24px */
 }
 
 a {
