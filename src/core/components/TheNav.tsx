@@ -2,9 +2,10 @@ import {useRef, useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {useClickAway} from 'react-use';
 
-import {useAuth} from '@/context/AuthContext';
-import {User} from '@/models';
+import {RoutePath} from '@/core/const/routePath';
+import {useAuth} from '@/core/context/AuthContext';
 
+import {User} from '../models/user';
 import ThemeSwitcher from './ThemeSwitcher';
 
 const TheNav = () => {
@@ -217,19 +218,15 @@ const TheNav = () => {
 export default TheNav;
 
 function generateNavLinks(user: User | null) {
-  const links = [{text: 'Public', to: '/public'}];
-
   if (!user) return null;
 
-  // TODO: l10n text
   if (user.role === 'SYSTEM_OPERATOR') {
-    links.push({text: 'Operator', to: '/operator'});
+    return [{text: 'Home', to: RoutePath.operator}];
   }
   if (user.role === 'PROVIDER_ADMIN') {
-    links.push({text: 'Provider', to: '/provider'});
+    return [{text: 'Home', to: RoutePath.provider}];
   }
   if (user.role === 'TENANT_USER' || user.role === 'TENANT_ADMIN') {
-    links.push({text: 'Tenant', to: '/tenant'});
+    return [{text: 'Home', to: RoutePath.tenant}];
   }
-  return links;
 }

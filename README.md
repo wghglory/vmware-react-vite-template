@@ -13,6 +13,6 @@ VMware project seed.
 - [x] Provider and Tenant Role
 - [x] Path Alias
 - [x] svgr
+- [x] Datagrid
 - [ ] Unit Test
 - [ ] E2E Test
-- [ ] Datagrid

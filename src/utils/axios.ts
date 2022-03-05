@@ -4,7 +4,7 @@ import {ACCESS_TOKEN} from '@/core/const';
 
 const http = axios.create({
   // https://github.com/vitejs/vite/issues/1149 Jest testing issues.
-  baseURL: `${import.meta.env.VITE_APP_HOST}/api/v1/gc/`,
+  baseURL: `${import.meta.env.VITE_APP_HOST}/api/v1/`,
   // withCredentials: true,
   // timeout: 10000,
 });

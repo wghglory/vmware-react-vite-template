@@ -32,3 +32,11 @@ export async function getTenants(pageQuery: PageQuery) {
 
   return await http.get(`/core/tenants?${queryString}`);
 }
+
+export async function deleteTenant({id}: {id: string}) {
+  return await http.delete(`/core/tenants/${id}`, {
+    data: {
+      payload: 'axios DELETE payload needs to wrap with data, unlike POST or PUT',
+    },
+  });
+}

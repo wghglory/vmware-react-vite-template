@@ -27,6 +27,7 @@ module.exports = {
     },
   },
   rules: {
+    'jsx-a11y/label-has-associated-control': [0, 'never'],
     'react/jsx-filename-extension': [0, {extensions: ['.tsx', '.ts']}],
     'import/extensions': [0, 'never'],
     'import/no-unresolved': [0, {caseSensitive: false}],

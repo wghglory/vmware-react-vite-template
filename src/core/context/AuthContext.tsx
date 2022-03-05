@@ -1,23 +1,19 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useReducer} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-import {ACCESS_TOKEN} from '@/const';
-import {SignInPayload, User} from '@/models';
 import http from '@/utils/axios';
 
+import {ACCESS_TOKEN} from '../const';
+import {RoutePath} from '../const/routePath';
+import {SignInPayload, User} from '../models/user';
 import {AuthActionTypes, authReducer} from './AuthReducer';
 import {AuthState, initialState} from './AuthState';
 
-export function AuthProvider({children, value}: {children: React.ReactNode; value?: AuthState}) {
+export function AuthProvider({children}: {children: React.ReactNode}) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  const from = (location.state as any)?.from?.pathname || '/'; // usually we jump to /
-
-  // const pathRef = useRef(location.pathname);
-  // const from = (location.state as any)?.from || '/';
 
   const signOut = useCallback(async () => {
     try {
@@ -37,8 +33,6 @@ export function AuthProvider({children, value}: {children: React.ReactNode; valu
       try {
         dispatch({type: AuthActionTypes.SignInInit});
 
-        console.log(payload);
-
         const {data: session, headers} = await http.post<{id: string; user: User}>('/session', payload);
 
         const token = headers[ACCESS_TOKEN];
@@ -46,14 +40,24 @@ export function AuthProvider({children, value}: {children: React.ReactNode; valu
 
         dispatch({type: AuthActionTypes.SignInSuccess, payload: session.user, meta: {token}});
 
+        // TODO: update defaultPath
+        const defaultPath = ['SYSTEM_OPERATOR', 'PROVIDER_ADMIN'].includes(session.user.role)
+          ? RoutePath.operator
+          : ['TENANT_USER', 'TENANT_ADMIN'].includes(session.user.role)
+          ? RoutePath.tenant
+          : '/';
+
+        // (location.state as any)?.from means user accessed protected pages, but probably token expires
+        const from = (location.state as any)?.from || defaultPath; // usually we jump to /
+
         navigate(from, {replace: true});
       } catch (error) {
         dispatch({type: AuthActionTypes.SignInFailure, error});
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [from],
-  ); // navigate will make function not unique...
+    [location, navigate],
+  ); // TODO: navigate will make function not unique... ADD navigate back to deps. VERIFY ANY BUG?
 
   const getUser = useCallback(async (token: string) => {
     try {
@@ -67,7 +71,7 @@ export function AuthProvider({children, value}: {children: React.ReactNode; valu
         meta: {token},
       });
     } catch (error) {
-      navigate('/sign-in');
+      navigate(RoutePath.signIn);
 
       localStorage.removeItem(ACCESS_TOKEN);
 
@@ -88,8 +92,8 @@ export function AuthProvider({children, value}: {children: React.ReactNode; valu
   const {user, status, error, token} = state;
 
   const v = useMemo(
-    () => ({user, status, error, token, ...value, signOut, signIn, getUser}),
-    [user, status, error, token, value, signOut, signIn, getUser],
+    () => ({user, status, error, token, signOut, signIn, getUser}),
+    [user, status, error, token, signOut, signIn, getUser],
   );
 
   return <AuthContext.Provider value={v}>{children}</AuthContext.Provider>;

@@ -21,11 +21,11 @@ const queryClient = new QueryClient({
   },
 });
 
-function AppProviders({children, authValue}: {children: React.ReactNode; authValue?: AuthState}) {
+function AppProviders({children}: {children: React.ReactNode}) {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider value={authValue}>
+        <AuthProvider>
           <ThemeProvider>{children}</ThemeProvider>
         </AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} />

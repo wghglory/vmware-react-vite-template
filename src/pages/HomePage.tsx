@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 
-import {useAuth} from '@/context/AuthContext';
+import {RoutePath} from '@/core/const/routePath';
+import {useAuth} from '@/core/context/AuthContext';
 import {l10n} from '@/i18n/i18nUtils';
 
 const HomePage = () => {
@@ -18,7 +19,7 @@ const HomePage = () => {
           <p className="mb-4 sm:mb-12 lg:text-lg">{l10n('common.productDesc')}</p>
           {!user && (
             <Link
-              to={'/sign-in'}
+              to={RoutePath.signIn}
               className="rounded-md bg-sky-600 py-3 px-10 text-xs font-semibold text-white hover:bg-sky-500 dark:bg-sky-500 dark:text-gray-100 hover:dark:bg-sky-600 sm:text-lg"
             >
               Sign In

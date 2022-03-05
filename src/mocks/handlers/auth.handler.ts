@@ -1,7 +1,7 @@
 import {rest} from 'msw';
 
-import {ACCESS_TOKEN} from '@/const';
-import {User} from '@/models/user';
+import {ACCESS_TOKEN} from '@/core/const';
+import {User} from '@/core/models/user';
 
 import {apiPrefix} from '../const';
 import users from '../data/users.data';
@@ -35,9 +35,9 @@ const handlers = [
 
   rest.get(`${apiPrefix}/current-user`, (req, _, ctx) => {
     const token = req.headers.get('Authorization');
-    const authUserString = localStorage.getItem('__MOCK_SERVER_USER__') || '';
+    const authUserString = localStorage.getItem('__MOCK_SERVER_USER__');
 
-    if (!token) {
+    if (!token || !authUserString) {
       // If not authenticated, respond with a 403 error
       return res(
         ctx.status(403),

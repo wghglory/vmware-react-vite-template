@@ -1,5 +1,5 @@
-import {ACCESS_TOKEN} from '@/const';
-import {User} from '@/models';
+import {ACCESS_TOKEN} from '../const';
+import {User} from '../models/user';
 
 export interface AuthState {
   status: 'default' | 'loading' | 'success' | 'error';

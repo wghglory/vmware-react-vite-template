@@ -1,4 +1,4 @@
-import {useTheme} from '@/context/ThemeContext';
+import {useTheme} from '@/core/context/ThemeContext';
 
 import style from './ThemeSwitcher.module.css';
 

@@ -1,5 +1,6 @@
-import {Action, User} from '@/models';
+import {Action} from '@/models';
 
+import {User} from '../models/user';
 import {AuthState} from './AuthState';
 
 export const AuthActionTypes = {
