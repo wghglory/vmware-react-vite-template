@@ -68,6 +68,13 @@ a {
   border-bottom: none;
 }
 
+/*
+Used for empty datagrid:
+.rdt_Table > div {
+  background: var(--dg-bg);
+  color: var(--dg-text);
+} */
+
 .rdt_Pagination {
   border: 1px solid var(--dg-border);
   background: var(--dg-header-bg) !important;

@@ -34,6 +34,11 @@ export default function Datagrid<T>(props: TableProps<T>): JSX.Element {
       pagination
       responsive
       highlightOnHover
+      noDataComponent={
+        <div className="flex min-h-[200px] w-full items-center justify-center bg-white p-6 text-xl text-gray-900 dark:bg-gray-800 dark:text-gray-100">
+          There are no records
+        </div>
+      }
       progressComponent={<DatagridLoading />}
       // selectableRowsHighlight
       selectableRowsComponentProps={selectableRowsComponentProps}
