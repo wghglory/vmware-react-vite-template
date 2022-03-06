@@ -1,14 +1,14 @@
 import {CdsTag} from '@cds/react/tag';
+import {useCallback, useEffect, useState} from 'react';
 import {TableColumn} from 'react-data-table-component';
 import {Link} from 'react-router-dom';
 
 import Datagrid from '@/components/common/Datagrid/Datagrid';
 import DatagridDropdown from '@/components/common/Datagrid/DatagridDropdown';
 import PageContainer from '@/components/common/PageContainer';
-import useDatagrid from '@/hooks/useDatagrid';
 import {l10n} from '@/i18n/i18nUtils';
 import {Tenant} from '@/models';
-import {useGetTenants, usePrefetchTenants} from '@/services/tenant.service';
+import {getTenants} from '@/services/tenant.service';
 
 const columns: TableColumn<Tenant>[] = [
   {
@@ -64,33 +64,57 @@ const columns: TableColumn<Tenant>[] = [
   },
 ];
 
-export default function ReactDataTablePage() {
-  const {page, pageSize, selectedRows, handlePageSizeChange, setSelectedRows, handlePageChange} = useDatagrid();
+export default function ReactDataTablePageOld() {
+  const [data, setData] = useState<Tenant[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
-  const tenantQuery = useGetTenants({offset: (page - 1) * pageSize, limit: pageSize});
+  const fetchData = useCallback(
+    pageIndex => {
+      setLoading(true);
 
-  usePrefetchTenants(
-    {
-      data: tenantQuery.data,
-      page,
-      pageSize,
+      getTenants({offset: pageIndex * pageSize, limit: pageSize}).then(res => {
+        setData(res.data.items);
+        setTotal(res.data.page_info.total);
+        setLoading(false);
+      });
     },
-    {
-      offset: (page - 1 + 1) * pageSize, // next page offset
-      limit: pageSize,
-    },
+    [pageSize],
   );
+
+  useEffect(() => {
+    fetchData(0); // fetch page 1 of users
+  }, [fetchData]);
+
+  const handlePageChange = (page: number) => {
+    fetchData(page - 1);
+  };
+  const handleSelectionChange = ({selectedRows}: any) => {
+    console.log('Selected Rows: ', selectedRows);
+  };
+  const handlePageSizeChange = async (pageSize: number, page: number) => {
+    setLoading(true);
+    const pageIndex = page - 1;
+
+    getTenants({offset: pageIndex * pageSize, limit: pageSize}).then(res => {
+      setData(res.data.items);
+      setTotal(res.data.page_info.total);
+      setPageSize(pageSize);
+      setLoading(false);
+    });
+  };
 
   return (
     <PageContainer title="React Data Table Page (remove when clarity core v6 datagrid arrives)">
       <Datagrid
         columns={columns}
-        data={tenantQuery.data?.items || []}
-        progressPending={tenantQuery.isLoading}
+        data={data}
+        progressPending={loading}
         selectableRows
         // selectableRowsSingle
-        paginationTotalRows={tenantQuery.data?.page_info.total || 0}
-        onSelectedRowsChange={({selectedRows}) => setSelectedRows(selectedRows)}
+        paginationTotalRows={total}
+        onSelectedRowsChange={handleSelectionChange}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePageSizeChange}
         // keyField="id"  // if id is tenantId, update here

@@ -5,24 +5,22 @@ import {generatePageQueryString, PageModel, PageQuery, Tenant} from '@/models';
 import http from '@/utils/axios';
 
 export function useGetTenants(pageQuery: PageQuery) {
-  return useQuery<PageModel<Tenant>, Error>(
-    ['getTenants', {...pageQuery}],
-    () => getTenants(pageQuery).then(res => res.data),
-    {
-      keepPreviousData: true,
-      // staleTime: 5000,
-    },
-  );
+  return useQuery<PageModel<Tenant>, Error>(['getTenants', {...pageQuery}], () => getTenants(pageQuery), {
+    keepPreviousData: true,
+    // staleTime: 5000,
+  });
 }
 
-export function usePrefetchTenants({data, page, pagination, filterString, sortString}: any, pageQuery: PageQuery) {
+export function usePrefetchTenants({data, page, pageSize}: any, pageQuery: PageQuery) {
   const queryClient = useQueryClient();
 
+  const shouldFetchNextPage = data && data.page_info.total > page * pageSize;
+
   useEffect(() => {
-    if (data && data.pageInfo.total > page * pagination.pageSize!) {
+    if (shouldFetchNextPage) {
       queryClient.prefetchQuery(['getTenants', {...pageQuery}], () => getTenants(pageQuery));
     }
-  }, [data, page, pagination.pageSize, filterString, sortString, queryClient, pageQuery]);
+  }, [pageQuery, queryClient, shouldFetchNextPage]);
 }
 
 export async function getTenants(pageQuery: PageQuery) {
@@ -30,7 +28,7 @@ export async function getTenants(pageQuery: PageQuery) {
   // filter: (name==*s*;enabled==false)
   const queryString = generatePageQueryString(pageQuery);
 
-  return await http.get(`/core/tenants?${queryString}`);
+  return await http.get(`/core/tenants?${queryString}`).then(res => res.data);
 }
 
 export async function deleteTenant({id}: {id: string}) {
