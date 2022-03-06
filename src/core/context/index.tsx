@@ -10,8 +10,6 @@ const queryClient = new QueryClient({
     queries: {
       // useErrorBoundary: true,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
       retry: false,
       // retry(failureCount, error: any) {
       //   // retry once
