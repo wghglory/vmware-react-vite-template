@@ -8,7 +8,6 @@ import {ThemeProvider} from './ThemeContext';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
       // useErrorBoundary: true,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
