@@ -15,6 +15,7 @@ const common = {
   'common.notFound': 'Oops! Page not found.',
   'common.pending': 'Pending',
   'common.status': 'Status',
+  'common.errorContainer': 'Error Container',
   'common.required': 'Required',
   'common.save': 'Save',
   'common.next': 'Next',
