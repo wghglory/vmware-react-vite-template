@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, {AxiosError, AxiosRequestConfig} from 'axios';
 
 import {ACCESS_TOKEN} from '@/core/const';
 
@@ -36,23 +36,29 @@ http.interceptors.request.use(vCDRequestInterceptor, error => {
 
 http.interceptors.response.use(
   res => res,
-  error => {
+  (error: Error | AxiosError) => {
     // todo: need jump ? Probably no
     // 401 and not in login page, redirect to login
     // if (error.response.status === 401 && window.location.pathname !== '/login') {
     //   window.location.href = `${process.env.REACT_APP_BASE_HREF}login`;
     // }
 
-    const {response} = error;
-    switch (response?.status) {
-      case 401:
-        // TODO: For CDS only, window.location.href = '/'. may need a timer to delay redirection; CPN will refresh token
-        break;
-      default:
-        break;
+    if (axios.isAxiosError(error)) {
+      // Access to config, request, and response
+      // timeout also here
+      const {response} = error as AxiosError;
+      switch (response?.status) {
+        case 401:
+          // TODO: For CDS only, window.location.href = '/'. may need a timer to delay redirection; CPN will refresh token
+          break;
+        default:
+          break;
+      }
+      return Promise.reject(error.response);
+    } else {
+      // native error
+      console.error(error, 'native error');
     }
-
-    return Promise.reject(error.response?.data || error);
   },
 );
 
