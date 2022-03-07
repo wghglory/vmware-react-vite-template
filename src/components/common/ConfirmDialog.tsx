@@ -1,8 +1,8 @@
-import {CdsAlert} from '@cds/react/alert';
 import {CdsButton} from '@cds/react/button';
 
 import {l10n} from '@/i18n/i18nUtils';
 
+import AppAlert from './AppAlert';
 import AppModal from './AppModal';
 
 export default function ConfirmDialog({
@@ -13,6 +13,8 @@ export default function ConfirmDialog({
   isLoading,
   error,
   disabled,
+  confirmStatus = 'danger',
+  size = 'default',
   children,
 }: {
   visible: boolean;
@@ -22,6 +24,8 @@ export default function ConfirmDialog({
   isLoading: boolean;
   error: Error | null;
   disabled?: boolean;
+  size?: 'xl' | 'lg' | 'default' | 'sm';
+  confirmStatus?: 'danger' | 'primary' | 'success' | 'warning' | 'neutral' | 'inverse' | undefined;
   children: React.ReactNode;
 }) {
   return (
@@ -29,13 +33,14 @@ export default function ConfirmDialog({
       visible={visible}
       closeChange={cancel}
       title={title}
+      size={size}
       footer={
         <div className="space-x-4">
           <CdsButton type="button" action="outline" onClick={cancel}>
             {l10n('common.cancel')}
           </CdsButton>
           <CdsButton
-            status="danger"
+            status={confirmStatus}
             onClick={confirm}
             loadingState={isLoading ? 'loading' : 'default'}
             disabled={disabled}
@@ -46,7 +51,7 @@ export default function ConfirmDialog({
       }
     >
       {children}
-      {error && <CdsAlert>{error.message}</CdsAlert>}
+      {error && <AppAlert className="mt-6">{error.message}</AppAlert>}
     </AppModal>
   );
 }
