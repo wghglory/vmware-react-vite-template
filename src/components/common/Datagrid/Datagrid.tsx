@@ -16,6 +16,7 @@ export interface TableProps<T> {
   selectableRows?: boolean;
   selectableRowsSingle?: boolean;
   keyField?: string;
+  selectableRowDisabled?: (row: T) => boolean;
 }
 
 const sortIcon = <CdsIcon shape="arrow" />;
