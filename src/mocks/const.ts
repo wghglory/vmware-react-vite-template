@@ -1,1 +1,1 @@
-export const apiPrefix = `*/api/v1`;
+export const apiPrefix = `*/${import.meta.env.VITE_APP_PREFIX}`;
