@@ -17,12 +17,14 @@ export default function MultiCheckbox({
 }: {
   label: string;
   inputName: string;
-  defaultCheckedItems: CheckboxItem[];
+  defaultCheckedItems?: CheckboxItem[];
   allItems: CheckboxItem[];
   description?: string;
   selectChange?: (items: string[]) => void;
 }) {
-  const [selectedValues, setSelectedValues] = useState(() => defaultCheckedItems.map(i => i.id));
+  const [selectedValues, setSelectedValues] = useState(() =>
+    defaultCheckedItems ? defaultCheckedItems.map(i => i.id) : [],
+  );
 
   return (
     <CdsCheckboxGroup>
