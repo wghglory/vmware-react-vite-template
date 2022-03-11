@@ -5,7 +5,7 @@ import http from '@/utils/axios';
 
 import {ACCESS_TOKEN} from '../const';
 import {RoutePath} from '../const/routePath';
-import {SignInPayload, User} from '../models/user';
+import {SignInPayload, SignInResponse, User} from '../models/user';
 import {AuthActionTypes, authReducer} from './AuthReducer';
 import {AuthState, initialState} from './AuthState';
 
@@ -33,12 +33,16 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
       try {
         dispatch({type: AuthActionTypes.SignInInit});
 
-        const {data: session, headers} = await http.post<{id: string; user: User}>('/session', payload);
+        const {data: session, headers} = await http.post<SignInResponse>('/session', payload);
 
-        const token = headers[ACCESS_TOKEN];
+        const token = session.user.token; // headers[ACCESS_TOKEN];
         localStorage.setItem(ACCESS_TOKEN, token);
 
-        dispatch({type: AuthActionTypes.SignInSuccess, payload: session.user, meta: {token}});
+        dispatch({
+          type: AuthActionTypes.SignInSuccess,
+          payload: {...session.user, id: session.user.username},
+          meta: {token},
+        });
 
         // TODO: update defaultPath
         const defaultPath = ['SYSTEM_OPERATOR', 'PROVIDER_ADMIN'].includes(session.user.role)
@@ -51,8 +55,8 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
         const from = (location.state as any)?.from || defaultPath; // usually we jump to /
 
         navigate(from, {replace: true});
-      } catch (error) {
-        dispatch({type: AuthActionTypes.SignInFailure, error});
+      } catch (error: any) {
+        dispatch({type: AuthActionTypes.SignInFailure, error: error.data});
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

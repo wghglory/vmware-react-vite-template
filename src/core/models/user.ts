@@ -12,4 +12,14 @@ export interface SignInPayload {
   password: string;
 }
 
+export interface SignInResponse {
+  user: {
+    email: string;
+    role: Role;
+    token: string;
+    username: string;
+    name: string;
+  };
+}
+
 export type Role = 'SYSTEM_OPERATOR' | 'PROVIDER_ADMIN' | 'TENANT_ADMIN' | 'TENANT_USER';
