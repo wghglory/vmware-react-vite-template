@@ -74,14 +74,14 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
         payload: user,
         meta: {token},
       });
-    } catch (error) {
+    } catch (error: any) {
       navigate(RoutePath.signIn);
 
       localStorage.removeItem(ACCESS_TOKEN);
 
       dispatch({
         type: AuthActionTypes.GetCurrentUserFailure,
-        error,
+        error: error.data,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
